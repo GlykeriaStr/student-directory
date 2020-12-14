@@ -24,7 +24,7 @@ end
 
 def print(names)
   names.each_with_index do |name, index|
-    if name[:name][0].upcase == "T"
+    if name[:name].length < 12
       puts "#{index + 1}. #{name[:name]} (#{name[:cohort]} cohort)"
     end
   end
