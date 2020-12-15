@@ -19,6 +19,23 @@ def input_students
 
   # return the array of students
   students
+  input_country(students)
+end
+
+def input_country(students)
+  puts "Please enter the country of birth of the student"
+  puts "To finish, just hit return twice"
+  country = gets.chomp
+  while !country.empty? do
+    n = 0
+    while n < students.count do
+      students[n][:country] = country
+      puts "#{students[n][:name]}'s country of birth is #{country}"
+      n += 1
+      country = gets.chomp
+    end
+  end
+  p students
 end
 
 def print_header
@@ -26,11 +43,9 @@ def print_header
   puts "-------------"
 end
 
-def print(names)
-  n = 0
-  while n < names.count do
-    puts "#{names[n][:name]}, #{names[n][:cohort]} cohort"
-    n += 1
+def print(students)
+  students.each do |name|
+    puts "#{name[:name]}, #{name[:cohort]} cohort, #{name[:country]}"
   end
 end
 
