@@ -23,6 +23,9 @@ def input_students
     end
     name_cohort = STDIN.gets.delete("\n")
   end
+  if students.empty?
+    exit
+  end
   students
 end
 
