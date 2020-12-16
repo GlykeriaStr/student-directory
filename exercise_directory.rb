@@ -1,70 +1,53 @@
 def input_students
-
   months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December]
-
-  puts "Please enter the names of the students".center(50)
+  puts "Please enter the names of the student and the cohort they are in separated by a comma".center(50)
   puts "To finish, just hit return twice".center(50)
 
-  #create an empty array
   students = []
+  name_cohort = gets.chomp
 
-# get the first name
-  name = gets.chomp
-
-#ask for cohort
-  puts "Please enter the cohort they are in".center(50)
-  puts "To finish, just hit return twice"
-
-#get the cohort
-  cohort = gets.chomp.to_sym.capitalize
-
-# while the name is not empty repeat this code
-  while !name.empty? do
-    if !cohort.empty? && months.include?(cohort)
-    #   # add the student hash to the array
-      students << {name: name, cohort: cohort}
+  while !name_cohort.empty? do
+    name, cohort = name_cohort.split(", ")
+    if cohort != nil && months.include?(cohort.to_sym.capitalize)
+      students << {name: name, cohort: cohort.to_sym.capitalize}
       puts "Now we have #{students.count} students".center(50)
-      # get another name from the user
-      name = gets.chomp
-      cohort = gets.chomp.to_sym.capitalize
-    elsif !cohort.empty? && !months.include?(cohort)
+    elsif cohort != nil && !months.include?(cohort.to_sym.capitalize)
       puts "Please enter a valid cohort".center(50)
-      cohort = gets.chomp.to_sym.capitalize
-    elsif cohort.empty?
+    elsif cohort == nil
       students << {name: name, cohort: :November}
-      name = gets.chomp
-      cohort = gets.chomp.to_sym.capitalize
+      puts "Now we have #{students.count} students".center(50)
     end
+    name_cohort = gets.chomp
   end
-
-  # return the array of students
   students
-  # input_country(students)
 end
 
-# def input_country(students)
-#   puts "Please enter the country of birth of the student".center(50)
-#   puts "To finish, just hit return twice".center(50)
-#   country = gets.chomp
-#   while !country.empty? do
-#     n = 0
-#     while n < students.count do
-#       students[n][:country] = country
-#       puts "#{students[n][:name]}'s country of birth is #{country}".center(50)
-#       n += 1
-#       country = gets.chomp
-#     end
-#   end
-# end
-
 def print_header
-  puts "The students of Villains Academy".center(50)
+  puts "The cohorts of Villains Academy".center(50)
   puts "-------------".center(50)
 end
 
 def print(names)
+  sort_by_cohort = {}
   names.each do |name|
-    puts "#{name[:name]}, #{name[:cohort]} cohort, #{name[:country]}".center(50)
+    cohort = name[:cohort]
+    name = name[:name]
+    if sort_by_cohort[cohort] == nil
+      sort_by_cohort[cohort] = [name]
+    else
+      sort_by_cohort[cohort].push(name)
+    end
+  end
+
+  puts sort_by_cohort.keys
+
+  puts "Which cohort would you like to see?"
+  answer = gets.chomp.to_sym.capitalize
+
+  if sort_by_cohort.include?(answer)
+    puts sort_by_cohort[answer]
+  else
+    puts "Choose from existing cohorts #{sort_by_cohort[cohort]}"
   end
 end
 
