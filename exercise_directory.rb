@@ -4,7 +4,7 @@ def input_students
   puts "To finish, just hit return twice".center(50)
 
   students = []
-  name_cohort = gets.chomp
+  name_cohort = STDIN.gets.delete("\n")
 
   while !name_cohort.empty? do
     name, cohort = name_cohort.split(", ")
@@ -21,7 +21,7 @@ def input_students
     else
       puts "Now we have #{students.count} students".center(50)
     end
-    name_cohort = gets.chomp
+    name_cohort = STDIN.gets.delete("\n")
   end
   students
 end
@@ -46,7 +46,7 @@ def print(names)
   puts sort_by_cohort.keys
 
   puts "Which cohort would you like to see?"
-  answer = gets.chomp.to_sym.capitalize
+  answer = STDIN.gets.delete("\n").to_sym.capitalize
 
   if sort_by_cohort.include?(answer)
     puts sort_by_cohort[answer]
