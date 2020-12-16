@@ -10,11 +10,15 @@ def input_students
     name, cohort = name_cohort.split(", ")
     if cohort != nil && months.include?(cohort.to_sym.capitalize)
       students << {name: name, cohort: cohort.to_sym.capitalize}
-      puts "Now we have #{students.count} students".center(50)
     elsif cohort != nil && !months.include?(cohort.to_sym.capitalize)
       puts "Please enter a valid cohort".center(50)
     elsif cohort == nil
       students << {name: name, cohort: :November}
+    end
+
+    if students.count == 1
+      puts "Now we have #{students.count} student".center(50)
+    else
       puts "Now we have #{students.count} students".center(50)
     end
     name_cohort = gets.chomp
