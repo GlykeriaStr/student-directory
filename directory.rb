@@ -111,12 +111,15 @@ def save_students
 end
 
 def load_students(filename = "students.csv")
-
+  puts "Which file would you like to see?\nThe csv files are: "
+  Dir.foreach("./") {|file| puts "#{file}" if file=~/.csv/}
+  filename = STDIN.gets.chomp
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
   end
+  print_student_list
   file.close
 end
 
