@@ -20,7 +20,7 @@ def process(selection)
   when "1"
     input_students
   when "2"
-    show_students
+    print_student_list
   when "3"
     save_students
   when "4"
@@ -62,20 +62,56 @@ def input_students
   @students
 end
 
-def show_students
-  print_header
-  print_student_list
-  print_footer
-end
-
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
 end
 
 def print_student_list
-  @students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  puts "Would you like to:
+        1. See all students
+        2. See all students in alphabetical order
+        3. See a specific cohort"
+  print_process = STDIN.gets.chomp.to_i
+
+  if print_process == 1
+    print_header
+    @students.each do |student|
+      puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    end
+    print_footer
+  elsif print_process == 2
+    alphabetical = []
+    (@students.length).times{alphabetical.push([])}
+    count = 0
+    while count < (@students.length - 1)
+      @students.each do |student|
+        alphabetical[count].push(student[:name])
+        alphabetical[count].push(student[:cohort])
+        count += 1
+      end
+    end
+    in_order = alphabetical.sort
+    puts "The students in alphabetical order are : "
+    in_order.each{|arr| puts "#{arr[0]}, #{arr[1]} cohort"}
+  elsif print_process == 3
+    sort_by_cohort = {}
+    @students.each do |student|
+      cohort = student[:cohort]
+      name = student[:name]
+      if sort_by_cohort[cohort] == nil
+        sort_by_cohort[cohort] = [name]
+      else
+        sort_by_cohort[cohort].push(name)
+      end
+    end
+      puts "The cohorts available are : #{sort_by_cohort.keys}"
+      cohort_choice = STDIN.gets.chomp.capitalize.to_sym
+      if sort_by_cohort.include?(cohort_choice)
+        puts sort_by_cohort[cohort_choice]
+      else
+        puts "Choose from existing cohorts #{sort_by_cohort.keys}"
+      end
   end
 end
 
@@ -111,14 +147,20 @@ def save_students
 end
 
 def load_students(filename = "students.csv")
-  puts "Which file would you like to see?\nThe csv files are: "
-  Dir.foreach("./") {|file| puts "#{file}" if file=~/.csv/}
-  filename = STDIN.gets.chomp
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
-  end
+    puts "Which file would you like to see?\nThe csv files are: "
+    Dir.foreach("./") {|file| puts "#{file}" if file=~/.csv/}
+    filename = STDIN.gets.chomp
+
+    if filename.nil? || !File.exists?(filename)
+      puts "Please choose from the given ones and don't forget to put the .csv extension."
+      filename = STDIN.gets.chomp
+    end
+
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      @students << {name: name, cohort: cohort.to_sym}
+    end
   print_student_list
   file.close
 end
