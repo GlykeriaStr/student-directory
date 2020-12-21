@@ -67,52 +67,69 @@ def print_header
   puts "-------------"
 end
 
+def print_process(choice)
+  case choice
+  when "1"
+    simple_print
+  when "2"
+    alphabetically
+  when "3"
+    print_cohort
+  else
+    puts "I don't know what you mean, please try again"
+  end
+end
+
+def simple_print
+  print_header
+  @students.each do |student|
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  end
+  print_footer
+end
+
+def alphabetically
+  alphabetical = []
+  (@students.length).times{alphabetical.push([])}
+  count = 0
+  while count < (@students.length - 1)
+    @students.each do |student|
+      alphabetical[count].push(student[:name])
+      alphabetical[count].push(student[:cohort])
+      count += 1
+    end
+  end
+  in_order = alphabetical.sort
+  puts "The students in alphabetical order are : "
+  in_order.each{|arr| puts "#{arr[0]}, #{arr[1]} cohort"}
+end
+
+def print_cohort
+  sort_by_cohort = {}
+  @students.each do |student|
+    cohort = student[:cohort]
+    name = student[:name]
+    if sort_by_cohort[cohort] == nil
+      sort_by_cohort[cohort] = [name]
+    else
+      sort_by_cohort[cohort].push(name)
+    end
+  end
+    puts "The cohorts available are : #{sort_by_cohort.keys}"
+    cohort_choice = STDIN.gets.chomp.capitalize.to_sym
+    if sort_by_cohort.include?(cohort_choice)
+      puts sort_by_cohort[cohort_choice]
+    else
+      puts "Choose from existing cohorts #{sort_by_cohort.keys}"
+    end
+end
+
 def print_student_list
   puts "Would you like to:
         1. See all students
         2. See all students in alphabetical order
         3. See a specific cohort"
-  print_process = STDIN.gets.chomp.to_i
-
-  if print_process == 1
-    print_header
-    @students.each do |student|
-      puts "#{student[:name]} (#{student[:cohort]} cohort)"
-    end
-    print_footer
-  elsif print_process == 2
-    alphabetical = []
-    (@students.length).times{alphabetical.push([])}
-    count = 0
-    while count < (@students.length - 1)
-      @students.each do |student|
-        alphabetical[count].push(student[:name])
-        alphabetical[count].push(student[:cohort])
-        count += 1
-      end
-    end
-    in_order = alphabetical.sort
-    puts "The students in alphabetical order are : "
-    in_order.each{|arr| puts "#{arr[0]}, #{arr[1]} cohort"}
-  elsif print_process == 3
-    sort_by_cohort = {}
-    @students.each do |student|
-      cohort = student[:cohort]
-      name = student[:name]
-      if sort_by_cohort[cohort] == nil
-        sort_by_cohort[cohort] = [name]
-      else
-        sort_by_cohort[cohort].push(name)
-      end
-    end
-      puts "The cohorts available are : #{sort_by_cohort.keys}"
-      cohort_choice = STDIN.gets.chomp.capitalize.to_sym
-      if sort_by_cohort.include?(cohort_choice)
-        puts sort_by_cohort[cohort_choice]
-      else
-        puts "Choose from existing cohorts #{sort_by_cohort.keys}"
-      end
-  end
+  print_process(STDIN.gets.chomp)
 end
 
 def print_footer
@@ -159,6 +176,7 @@ def load_students(filename = "students.csv")
     file = File.open(filename, "r")
     file.readlines.each do |line|
       name, cohort = line.chomp.split(',')
+      #TODO: if exists don't put it
       @students << {name: name, cohort: cohort.to_sym}
     end
   print_student_list
