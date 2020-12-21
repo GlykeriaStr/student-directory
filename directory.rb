@@ -143,24 +143,25 @@ def save_students
   filename = "students.csv" if filename.split(".").length == 0
 
   if filename.split(".")[0] == nil
-    file = File.open("students.csv", "w")
+    File::open("students.csv", "w") do |file|
+      @students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+      end
+    end
+  elsif filename.split(".")[1] == "csv"
+  File::open(filename, "w") do |file|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
       csv_line = student_data.join(",")
       file.puts csv_line
     end
-  elsif filename.split(".")[1] == "csv"
-  file = File.open(filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
   end
   else
     puts "The file will be saved as 'csv'.\nPlease enter a filename with or without the '.csv' extension."
   end
   puts "The list of students have been saved on #{filename}."
-  file.close
 end
 
 def load_students(filename = "students.csv")
@@ -173,14 +174,14 @@ def load_students(filename = "students.csv")
       filename = STDIN.gets.chomp
     end
 
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      #TODO: if exists don't put it
-      @students << {name: name, cohort: cohort.to_sym}
+    File::open(filename, "r") do |file|
+      file.readlines.each do |line|
+        name, cohort = line.chomp.split(',')
+        #TODO: if exists don't put it
+        @students << {name: name, cohort: cohort.to_sym}
+      end
     end
   print_student_list
-  file.close
 end
 
 def try_load_students
