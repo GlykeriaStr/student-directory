@@ -1,3 +1,4 @@
+require 'csv'
 @students = []
 
 def print_menu
@@ -143,17 +144,17 @@ def save_students
   filename = "students.csv" if filename.split(".").length == 0
 
   if filename.split(".")[0] == nil
-    File.foreach("students.csv", "w") do |line|
+    CSV.open("students.csv", "w") do |csv|
       @students.each do |student|
         student_data = [student[:name], student[:cohort]]
-        line = student_data.join(",")
+        csv << student_data
       end
     end
   elsif filename.split(".")[1] == "csv"
-  File.foreach(filename, "w") do |line|
+    CSV.open(filename, "w") do |csv|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
-      line = student_data.join(",")
+      csv << student_data
     end
   end
   else
