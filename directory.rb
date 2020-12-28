@@ -177,7 +177,6 @@ def load_students(filename = "students.csv")
     File::open(filename, "r") do |file|
       file.readlines.each do |line|
         name, cohort = line.chomp.split(',')
-        #TODO: if exists don't put it
         if @students.empty?
           @students << {name: name, cohort: cohort.to_sym}
         else
